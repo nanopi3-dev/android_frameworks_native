@@ -96,6 +96,10 @@ endif
 LOCAL_CFLAGS += -fvisibility=hidden -Werror=format
 LOCAL_CFLAGS += -std=c++11
 
+ifeq ($(TARGET_BOARD_PLATFORM), slsiap)
+	LOCAL_CFLAGS += -DPATCH_FOR_SLSIAP
+endif
+
 LOCAL_SHARED_LIBRARIES := \
 	libcutils \
 	liblog \

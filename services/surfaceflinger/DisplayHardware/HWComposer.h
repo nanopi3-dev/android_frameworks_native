@@ -96,6 +96,10 @@ public:
     // Asks the HAL what it can do
     status_t prepare();
 
+#ifdef PATCH_FOR_SLSIAP
+    status_t wait_commit();
+#endif
+
     // commits the list
     status_t commit();
 
@@ -159,6 +163,21 @@ public:
     // For physical displays, it is no longer being displayed. For virtual
     // displays, writes to the output buffer are complete.
     sp<Fence> getLastRetireFence(int32_t id) const;
+
+#ifdef PATCH_FOR_SLSIAP
+    void setBeforeGlesComposite(int32_t id, bool isGles) {
+        mBeforeGlesComposite[id] = isGles;
+    }
+    bool getBeforeGlesComposite(int32_t id) const {
+        return mBeforeGlesComposite[id];
+    }
+    void setForceSwapBuffers(int32_t id, bool force) {
+        mForceSwapBuffers[id] = force;
+    }
+    bool getForceSwapBuffers(int32_t id) const {
+        return mForceSwapBuffers[id];
+    }
+#endif
 
     status_t setCursorPositionAsync(int32_t id, const Rect &pos);
 
@@ -445,6 +464,11 @@ private:
     bool needsScaling(int32_t id);
     float mDynThreshold;
     bool canHandleOverlapArea(int32_t id, Rect unionDr);
+#endif
+
+#ifdef PATCH_FOR_SLSIAP
+    bool mBeforeGlesComposite[MAX_HWC_DISPLAYS];
+    bool mForceSwapBuffers[MAX_HWC_DISPLAYS];
 #endif
 };
 
